@@ -16,7 +16,9 @@ app.use("/note", notesRoutes);
 client.connect(() => {
     console.log("Connected database")
 })
-
+app.get("/", (req, res) => {
+    res.send("Server is up and running");
+})
 app.listen(port, () => {
     console.log("Server at 8000");
 })
