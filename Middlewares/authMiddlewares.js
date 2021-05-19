@@ -12,6 +12,7 @@ exports.verifyToken = (req,res,next) => {
                     res.status(400).json({message: "Sign In first"});
                 }else{
                     req.email = userEmail;
+                   
                     next();
                      
                 }

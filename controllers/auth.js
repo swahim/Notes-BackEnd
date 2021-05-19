@@ -29,7 +29,8 @@ exports.signUp =  (req,res) => {
                 email : email,
             }, process.env.SECRET_KEY);
             res.status(200).json({
-                message : "User added succesfully dattabae",
+                // name,
+                message : "User added succesfully!",
                 token : token,
             })
         })
@@ -46,12 +47,18 @@ exports.signUp =  (req,res) => {
 
 exports.signIn = async (req,res) => {
     const {email, password} = req.body;
-    const passwordGet =  await client.query(`SELECT * FROM users WHERE email = '${email}'`);
-    if(passwordGet == null) {
+    // console.log(email);
+    const passwordGet = await client.query(`SELECT * FROM users WHERE email = '${email}'`).catch((err) => {
+        console.log(err);
+    });
+//    console.log(passwordGet.rows[0])
+    if(passwordGet.rows[0] == null) {
+        console.log("User not ");
         res.status(401).json({
             message : "User does not exists",
         })
     }else{
+        const name = passwordGet.rows[0].name;
         const compare = await bycrypt.compare(password, passwordGet.rows[0].password, (err, result) => {
             if(err){
                 res.status(500).send("Database error");
@@ -67,6 +74,7 @@ exports.signIn = async (req,res) => {
                         email : email,
                     }, process.env.SECRET_KEY);
                     res.status(200).json({
+                        // name,
                         message : "User signed in successfully",
                         token : token,
                     })
